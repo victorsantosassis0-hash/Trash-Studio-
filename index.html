@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friends Paper — Gerador de Pacotes | Trash Studios</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect x='10' y='14' width='40' height='8' rx='2' fill='%23111'/%3E%3Crect x='22' y='6' width='16' height='8' rx='2' fill='%23111'/%3E%3Cpath d='M14,24 L46,24 L42,54 L18,54 Z' fill='%23111'/%3E%3Cline x1='24' y1='30' x2='23' y2='48' stroke='%23fbfaf7' stroke-width='2.5'/%3E%3Cline x1='30' y1='30' x2='30' y2='48' stroke='%23fbfaf7' stroke-width='2.5'/%3E%3Cline x1='36' y1='30' x2='37' y2='48' stroke='%23fbfaf7' stroke-width='2.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Permanent+Marker&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#141414;
+    --paper:#fbfaf7;
+    --blue:#2f6fdb;
+    --blue-deep:#1e4fae;
+    --felt:#c9c9c9;
+    --comum:#8f96a3;
+    --incomum:#2fa86a;
+    --raro:#2f6fdb;
+    --epico:#9b4fd6;
+    --lendario:#dd9b1f;
+    --secreto:#111111;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 40%),
+      repeating-linear-gradient(45deg, rgba(0,0,0,0.015) 0 2px, transparent 2px 4px),
+      var(--felt);
+    font-family:'Patrick Hand', sans-serif;
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:0 0 80px;
+  }
+  h1,.marker{font-family:'Permanent Marker', cursive; font-weight:400;}
+  .kalam{font-family:'Kalam', cursive; font-weight:700;}
+  a{color:inherit;}
+
+  /* ---------- SITE HEADER ---------- */
+  .site-header{
+    width:100%;
+    background:var(--ink);
+    color:#fff;
+    border-bottom:3px solid #000;
+  }
+  .site-header-inner{
+    max-width:1000px;
+    margin:0 auto;
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .brand-lockup{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-lockup .logo-icon{ width:34px; height:34px; flex-shrink:0; color:#fff; }
+  .brand-lockup .logo-icon svg{ width:100%; height:100%; }
+  .brand-lockup .wordmark{
+    display:flex;
+    flex-direction:column;
+    line-height:1;
+  }
+  .brand-lockup .wordmark .studio{
+    font-family:'Permanent Marker';
+    font-size:15px;
+    letter-spacing:1px;
+    color:#fff;
+  }
+  .brand-lockup .wordmark .tagline{
+    font-family:'Kalam'; font-weight:700;
+    font-size:10.5px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:#b9b9b9;
+    margin-top:2px;
+  }
+  .header-badge{
+    font-family:'Kalam'; font-weight:700;
+    font-size:12px;
+    border:1.5px solid #fff;
+    color:#fff;
+    padding:4px 12px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .sound-toggle{
+    font-size:16px;
+    background:transparent;
+    border:1.5px solid #fff;
+    color:#fff;
+    width:32px; height:32px;
+    border-radius:50%;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    transition:transform .12s ease, background .15s ease;
+  }
+  .sound-toggle:active{ transform:scale(.9); }
+  .sound-toggle.muted{ opacity:.55; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    width:100%;
+    max-width:1000px;
+    padding:38px 20px 6px;
+    text-align:center;
+  }
+  .hero .presented-by{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:#fff;
+    border:2px solid var(--ink);
+    border-radius:20px;
+    padding:4px 12px 4px 6px;
+    font-family:'Kalam'; font-weight:700;
+    font-size:12px;
+    letter-spacing:.5px;
+    box-shadow:2px 2px 0 var(--ink);
+    margin-bottom:18px;
+  }
+  .hero .presented-by .logo-icon{ width:20px; height:20px; color:var(--ink); }
+  .hero .presented-by .logo-icon svg{ width:100%; height:100%; }
+
+  .page-title{
+    text-align:center;
+    margin-bottom:4px;
+  }
+  .page-title h1{
+    font-size:clamp(28px,6vw,46px);
+    margin:0;
+    letter-spacing:1px;
+  }
+  .page-title p{
+    margin:6px 0 30px;
+    font-size:18px;
+    opacity:0.75;
+    max-width:520px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  /* ---------- SITE FOOTER ---------- */
+  .site-footer{
+    width:100%;
+    max-width:760px;
+    margin-top:48px;
+    padding:26px 20px 4px;
+    border-top:2px dashed rgba(0,0,0,0.35);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    text-align:center;
+  }
+  .site-footer .brand-lockup .logo-icon{ color:var(--ink); }
+  .site-footer .brand-lockup .wordmark .studio{ color:var(--ink); }
+  .site-footer .brand-lockup .wordmark .tagline{ color:#666; }
+  .site-footer p{
+    margin:0;
+    font-size:12.5px;
+    opacity:.6;
+    max-width:420px;
+  }
+
+  /* ---------- TELA INICIAL (SPLASH) ---------- */
+  .splash-screen{
+    position:fixed; inset:0; z-index:999;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(255,255,255,0.3), transparent 45%),
+      var(--felt);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px;
+  }
+  .splash-screen.hidden{ display:none; }
+  .splash-content{
+    width:min(360px,92vw);
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:20px;
+    padding:30px 24px 26px;
+    text-align:center;
+    box-shadow:6px 6px 0 var(--ink);
+    animation:splashPop .5s cubic-bezier(.3,1.5,.4,1);
+  }
+  @keyframes splashPop{
+    0%{ transform:scale(.7); opacity:0; }
+    100%{ transform:scale(1); opacity:1; }
+  }
+  .trash-full-logo{ display:block; width:150px; height:auto; margin:0 auto 4px; filter:drop-shadow(2px 3px 0 rgba(0,0,0,.15)); }
+  .trash-full-logo svg{ width:100%; height:auto; display:block; }
+  .game-logo{ display:flex; flex-direction:column; align-items:center; gap:2px; margin-bottom:6px; }
+  .gl-presents{ font-family:'Kalam'; font-weight:700; font-size:12px; opacity:.55; letter-spacing:2px; text-transform:uppercase; margin-bottom:2px; }
+  .game-logo-text{ display:flex; flex-direction:column; line-height:.95; margin-top:2px; }
+  .gl-line1{ font-family:'Permanent Marker'; font-size:30px; letter-spacing:1px; transform:rotate(-2deg); }
+  .gl-line2{ font-family:'Permanent Marker'; font-size:34px; letter-spacing:2px; color:var(--blue); transform:rotate(1deg); }
+  .splash-tagline{ font-size:14px; opacity:.7; margin:10px 0 22px; }
+  .splash-btns{ display:flex; flex-direction:column; gap:10px; align-items:stretch; }
+  .splash-play-btn{
+    font-size:19px; padding:13px 20px;
+    animation:playPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes playPulse{
+    0%,100%{ box-shadow:3px 3px 0 var(--ink); transform:translate(0,0); }
+    50%{ box-shadow:3px 7px 0 var(--ink); transform:translate(0,-3px); }
+  }
+
+  /* ---------- LOJA DE POKÉBOLAS ---------- */
+  .shop-overlay{
+    display:none;
+    position:fixed; inset:0; z-index:1000;
+    background:rgba(20,20,20,0.55);
+    align-items:center; justify-content:center;
+    padding:20px;
+  }
+  .shop-overlay.show{ display:flex; }
+  .shop-panel{
+    width:min(420px,94vw);
+    max-height:86vh;
+    overflow-y:auto;
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:16px;
+    padding:22px 20px;
+    text-align:center;
+    box-shadow:6px 6px 0 rgba(0,0,0,.4);
+    animation:splashPop .35s cubic-bezier(.3,1.5,.4,1);
+  }
+  .shop-panel h3{ font-family:'Permanent Marker'; font-size:22px; margin:0 0 4px; }
+  .shop-sub{ font-size:13px; opacity:.65; margin-bottom:16px; }
+  .ball-grid{ display:flex; flex-direction:column; gap:12px; margin-bottom:16px; }
+  .ball-card{
+    display:flex; align-items:center; gap:12px;
+    border:2.5px solid var(--ink); border-radius:14px;
+    padding:10px 12px;
+    text-align:left;
+    background:#fff;
+  }
+  .ball-card.equipped{ background:#eaf2ff; box-shadow:0 0 0 3px #2f6fdb44; }
+  .ball-icon{ width:46px; height:46px; flex-shrink:0; }
+  .ball-icon svg{ width:100%; height:100%; }
+  .ball-info{ flex:1; }
+  .ball-name{ font-family:'Kalam'; font-weight:700; font-size:14.5px; }
+  .ball-meta{ font-size:11.5px; opacity:.65; margin-top:2px; }
+  .ball-select-btn{
+    font-family:'Kalam'; font-weight:700; font-size:12px;
+    border:2px solid var(--ink); border-radius:14px;
+    padding:6px 12px; cursor:pointer; background:var(--blue); color:#fff;
+    white-space:nowrap;
+  }
+  .ball-select-btn.is-equipped{ background:var(--incomum); cursor:default; }
+  .ball-select-btn:disabled{ opacity:.5; cursor:not-allowed; }
+  .btn{
+    font-family:'Kalam'; font-weight:700; font-size:16px;
+    background:var(--blue); color:#fff; border:2.5px solid var(--ink);
+    padding:10px 22px; border-radius:30px; cursor:pointer;
+    box-shadow:3px 3px 0 var(--ink);
+    transition:transform .1s ease;
+  }
+  .btn:active{ transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
+  .btn.secondary{ background:var(--paper); color:var(--ink); }
+
+  @keyframes shinySpin{
+    0%{ transform:rotate(0deg) scale(1); }
+    100%{ transform:rotate(360deg) scale(1); }
+  }
+  .shiny-badge{
+    display:inline-flex; align-items:center; gap:4px;
+    font-family:'Kalam'; font-weight:700; font-size:11px;
+    background:linear-gradient(90deg,#ff6b6b,#ffd93d,#6bffb8,#6bd4ff,#b48bff);
+    background-size:200% auto;
+    color:#111;
+    padding:3px 10px; border-radius:12px;
+    border:1.5px solid var(--ink);
+    animation:shinyText 2.5s linear infinite;
+  }
+  @keyframes shinyText{
+    0%{ background-position:0% center; }
+    100%{ background-position:200% center; }
+  }
+  .new-tag{
+    display:inline-block; font-size:11px; background:var(--blue); color:#fff;
+    padding:2px 8px; border-radius:10px; font-family:'Kalam'; font-weight:700;
+  }
+  .sparkle{
+    position:absolute; font-size:20px; pointer-events:none;
+    animation:sparklePop .9s ease forwards;
+  }
+  @keyframes sparklePop{
+    0%{ transform:scale(0) rotate(0deg); opacity:0; }
+    30%{ transform:scale(1.3) rotate(20deg); opacity:1; }
+    100%{ transform:scale(.9) rotate(60deg) translateY(-30px); opacity:0; }
+  }
+
+  .glow-comum{}
+  .glow-incomum{ box-shadow:0 0 0 4px #2fa86a33, 0 10px 24px rgba(0,0,0,.3); }
+  .glow-raro{ box-shadow:0 0 0 5px #2f6fdb44, 0 12px 26px rgba(0,0,0,.32); }
+  .glow-epico{ box-shadow:0 0 0 6px #9b4fd655, 0 14px 30px rgba(0,0,0,.35); }
+  .glow-mitico{ box-shadow:0 0 26px 6px #e0457a77, 0 14px 30px rgba(0,0,0,.35); animation:pulseMitico 1.5s ease-in-out infinite; }
+  @keyframes pulseMitico{
+    0%,100%{ box-shadow:0 0 20px 4px #e0457a55, 0 14px 30px rgba(0,0,0,.35);}
+    50%{ box-shadow:0 0 32px 10px #e0457a99, 0 14px 30px rgba(0,0,0,.35);}
+  }
+  .glow-lendario{ box-shadow:0 0 24px 6px #dd9b1f88, 0 16px 34px rgba(0,0,0,.4); animation:pulseGold 1.4s ease-in-out infinite; }
+  @keyframes pulseGold{
+    0%,100%{ box-shadow:0 0 20px 4px #dd9b1f66, 0 16px 34px rgba(0,0,0,.4);}
+    50%{ box-shadow:0 0 34px 10px #dd9b1faa, 0 16px 34px rgba(0,0,0,.4);}
+  }
+  .glow-secreto{
+    box-shadow:0 0 30px 8px #00000099, 0 16px 34px rgba(0,0,0,.5);
+    animation:rainbowGlow 2s linear infinite;
+  }
+  @keyframes rainbowGlow{
+    0%{ filter:hue-rotate(0deg);}
+    100%{ filter:hue-rotate(360deg);}
+  }
+
+  /* ---------- RELÓGIO ---------- */
+  .clock-panel{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#fff;
+    border:2px solid var(--ink);
+    border-radius:20px;
+    padding:6px 16px;
+    margin-bottom:18px;
+    box-shadow:2px 2px 0 var(--ink);
+  }
+  .clock-time{
+    font-family:'Permanent Marker';
+    font-size:16px;
+    color:var(--blue-deep);
+    letter-spacing:.5px;
+  }
+  .clock-date{
+    font-family:'Kalam'; font-weight:700;
+    font-size:12.5px;
+    opacity:.7;
+    text-transform:capitalize;
+    border-left:2px dashed var(--ink);
+    padding-left:8px;
+  }
+
+  /* ---------- ENERGIA / BILHETES ---------- */
+  .energy-panel{
+    width:min(300px,80vw);
+    background:var(--paper);
+    border:2.5px solid var(--ink);
+    border-radius:12px;
+    padding:10px 14px;
+    margin:0 0 20px;
+    box-shadow:2px 2px 0 var(--ink);
+  }
+  .energy-row{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  .energy-label{
+    font-family:'Kalam'; font-weight:700; font-size:12.5px; letter-spacing:.5px; text-transform:uppercase; opacity:.7;
+  }
+  .tickets{ display:flex; gap:5px; }
+  .ticket{
+    width:16px; height:20px;
+    border:2px solid var(--ink);
+    border-radius:4px;
+    background:transparent;
+    position:relative;
+    transition:background .25s ease, transform .2s ease;
+  }
+  .ticket.filled{ background:var(--blue); }
+  .ticket.just-filled{ animation:ticketPop .5s ease; }
+  @keyframes ticketPop{
+    0%{ transform:scale(0.4) rotate(-10deg); }
+    60%{ transform:scale(1.25) rotate(6deg); }
+    100%{ transform:scale(1) rotate(0); }
+  }
+  .energy-timer{
+    text-align:center; font-size:13px; margin-top:6px; opacity:.75;
+  }
+  .energy-timer b{ color:var(--blue-deep); }
+  .energy-full{ color:var(--incomum); font-weight:700; }
+
+  /* ---------- CAPTURA SELVAGEM (POKÉBOLA) ---------- */
+  .capture-panel{
+    width:min(360px,88vw);
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:16px;
+    padding:20px 18px 22px;
+    text-align:center;
+    position:relative;
+    box-shadow:4px 4px 0 var(--ink);
+    margin-bottom:26px;
+  }
+  .capture-panel h3{
+    font-family:'Permanent Marker'; font-size:20px; margin:0 0 2px;
+  }
+  .capture-sub{ font-size:13px; opacity:.65; margin-bottom:10px; }
+  .wild-category{
+    display:inline-block;
+    font-family:'Kalam'; font-weight:700; font-size:11.5px;
+    background:#fff; border:1.5px solid var(--ink); border-radius:12px;
+    padding:2px 10px; margin-bottom:8px; opacity:.85;
+  }
+
+  .wild-face-box{ width:150px; height:150px; margin:0 auto 6px; position:relative; border-radius:50%; transition:box-shadow .3s ease; }
+  .wild-face-box svg{ width:100%; height:100%; display:block; }
+  .wild-face-box.flee{ animation:wildFlee .5s ease; }
+  @keyframes wildFlee{
+    0%,100%{ transform:translateX(0) rotate(0); }
+    20%{ transform:translateX(-10px) rotate(-6deg); }
+    40%{ transform:translateX(10px) rotate(6deg); }
+    60%{ transform:translateX(-8px) rotate(-4deg); }
+    80%{ transform:translateX(8px) rotate(4deg); }
+  }
+  .wild-face-box.captured{
+    animation:wildCaptured .5s ease forwards;
+  }
+  @keyframes wildCaptured{
+    0%{ transform:scale(1); opacity:1; }
+    100%{ transform:scale(.15) translateY(70px); opacity:0; }
+  }
+  .wild-name{ font-family:'Permanent Marker'; font-size:19px; margin-top:2px; }
+  .wild-rarity-row{ display:flex; align-items:center; justify-content:center; gap:8px; margin:2px 0 6px; }
+  .wild-rarity-badge{
+    font-family:'Kalam'; font-weight:700; font-size:11px;
+    padding:2px 10px; border-radius:10px; border:1.5px solid var(--ink);
+  }
+  .wild-catch-odds{ font-size:11.5px; opacity:.6; }
+
+  .throw-area{
+    height:96px;
+    display:flex; align-items:flex-end; justify-content:center;
+    margin:6px 0 4px;
+  }
+  .pokeball{
+    width:58px; height:58px;
+    cursor:pointer;
+    flex-shrink:0;
+    filter:drop-shadow(2px 3px 0 #111);
+  }
+  .pokeball svg{ width:100%; height:100%; display:block; }
+  .pokeball:hover{ transform:scale(1.06); }
+  .pokeball.dourada{ filter:drop-shadow(2px 3px 0 #111) drop-shadow(0 0 8px #dd9b1f88); }
+  .pokeball.throwing{ animation:pbThrow .45s ease forwards; }
+  @keyframes pbThrow{
+    0%{ transform:translateY(0) rotate(0deg); }
+    100%{ transform:translateY(-78px) rotate(420deg); }
+  }
+  .pokeball.wobbling{ animation:pbWobble 1.7s ease-in-out forwards; }
+  @keyframes pbWobble{
+    0%{ transform:translateY(-78px) rotate(0deg); }
+    8%{ transform:translateY(-78px) rotate(-20deg); }
+    16%{ transform:translateY(-78px) rotate(0deg); }
+    24%{ transform:translateY(-78px) rotate(20deg); }
+    32%{ transform:translateY(-78px) rotate(0deg); }
+    45%{ transform:translateY(-78px) rotate(-16deg); }
+    53%{ transform:translateY(-78px) rotate(0deg); }
+    61%{ transform:translateY(-78px) rotate(16deg); }
+    69%{ transform:translateY(-78px) rotate(0deg); }
+    100%{ transform:translateY(-78px) rotate(0deg); }
+  }
+  .pokeball.reset-pos{ transition:transform .4s ease; transform:translateY(0) rotate(0deg); }
+  .pokeball.caught{
+    box-shadow:0 0 0 6px #ffd93d55, 2px 3px 0 #111;
+  }
+  .pokeball.disabled{ cursor:not-allowed; filter:drop-shadow(2px 3px 0 #111) grayscale(.5) brightness(.85); }
+
+  .capture-msg{
+    font-size:14px; min-height:20px; margin:8px 0 12px;
+  }
+  .capture-msg.success{ color:var(--incomum); font-weight:700; }
+  .capture-msg.fail{ color:#c0392b; }
+  .capture-btns{ display:flex; gap:10px; justify-content:center; }
+
+  /* ---------- CAIXA DA COLEÇÃO ---------- */
+  .box-wrap{
+    display:none;
+    flex-direction:column; align-items:center;
+    margin:4px 0 28px;
+    position:relative;
+  }
+  .box-wrap.show{ display:flex; animation:boxDropIn .5s cubic-bezier(.3,1.6,.4,1); }
+  @keyframes boxDropIn{
+    0%{ transform:translateY(-40px) scale(.6); opacity:0; }
+    60%{ transform:translateY(6px) scale(1.05); opacity:1; }
+    100%{ transform:translateY(0) scale(1); opacity:1; }
+  }
+  .collection-box{
+    width:140px; height:116px;
+    cursor:pointer;
+    filter:drop-shadow(3px 4px 0 rgba(0,0,0,.5));
+    transition:transform .15s ease;
+    animation:boxIdle 2.2s ease-in-out infinite;
+  }
+  .collection-box:hover{ transform:scale(1.05) rotate(-2deg); }
+  @keyframes boxIdle{
+    0%,100%{ transform:rotate(0deg); }
+    50%{ transform:rotate(-1.5deg); }
+  }
+  .box-lid-left, .box-lid-right{
+    transform-box: fill-box;
+    transition:transform .35s cubic-bezier(.3,1.6,.4,1);
+  }
+  .collection-box.opening{ animation:boxShake .5s ease; }
+  @keyframes boxShake{
+    0%,100%{ transform:rotate(0); }
+    20%{ transform:rotate(-4deg) scale(1.03); }
+    40%{ transform:rotate(4deg) scale(1.03); }
+    60%{ transform:rotate(-3deg) scale(1.05); }
+    80%{ transform:rotate(3deg) scale(1.05); }
+  }
+  .collection-box.opening .box-lid-left{ transform:rotate(-100deg) translate(-6px,4px); }
+  .collection-box.opening .box-lid-right{ transform:rotate(100deg) translate(6px,4px); }
+  .collection-box.opened{ opacity:0; transform:scale(.7) translateY(-20px); transition:opacity .4s ease, transform .4s ease; pointer-events:none; }
+  .box-hint{
+    font-size:13px; opacity:.65; margin-top:8px; text-align:center;
+  }
+
+  /* ---------- CATALOG ---------- */
+  .catalog-toggle{ margin-top:18px; }
+  .catalog{
+    width:min(760px,94vw);
+    margin-top:26px;
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:14px;
+    padding:18px;
+    display:none;
+  }
+  .catalog.show{ display:block; animation:catalogReveal .5s cubic-bezier(.3,1.4,.4,1); }
+  @keyframes catalogReveal{
+    0%{ transform:translateY(-16px) scale(.94); opacity:0; }
+    100%{ transform:translateY(0) scale(1); opacity:1; }
+  }
+  .catalog h3{
+    font-family:'Permanent Marker'; text-align:center; margin:2px 0 4px; font-size:22px;
+  }
+  .catalog .progress{
+    text-align:center; font-size:14px; opacity:.75; margin-bottom:14px;
+  }
+  .cat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
+    gap:12px;
+  }
+  .cat-section{ margin-bottom:22px; }
+  .cat-section:last-child{ margin-bottom:4px; }
+  .cat-section-header{
+    display:flex; align-items:center; gap:10px;
+    margin:0 0 12px;
+  }
+  .cat-section-header .line{
+    flex:1; height:2px; background:repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 10px);
+    opacity:.5;
+  }
+  .cat-section-title{
+    font-family:'Permanent Marker'; font-size:16px; white-space:nowrap;
+    display:flex; align-items:center; gap:6px;
+  }
+  .cat-section-count{
+    font-family:'Kalam'; font-weight:700; font-size:12px; opacity:.6; white-space:nowrap;
+  }
+  .cat-item{
+    border:2px solid var(--ink);
+    border-radius:10px;
+    padding:8px 6px 6px;
+    text-align:center;
+    background:#f
